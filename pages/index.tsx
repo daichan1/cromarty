@@ -9,7 +9,7 @@ const Top = () => (
     </Head>
     <div className="wrapper">
       <h1 className="title">ハイ&ロー</h1>
-      <Link href='/'>
+      <Link href='/rule'>
         <a className="link mg-20">ルール説明</a>
       </Link>
       <form>
