@@ -7,7 +7,7 @@ class Top extends React.Component {
     super(props)
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <div>
         <Head>
