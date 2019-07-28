@@ -2,18 +2,18 @@ import React from 'react'
 import Link from 'next/link'
 
 class Rule extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <div className="wrapper">
-        <Link href='/'>
+        <Link href="/">
           <a>トップへ戻る</a>
         </Link>
         <h1 className="title">ルール説明</h1>
-        
+
         <h2>遊び方</h2>
         <ul>
           <li>選択する前にベットするコインを決める</li>
@@ -38,7 +38,7 @@ class Rule extends React.Component {
         <ul>
           <li>「A」が一番弱く「ジョーカー」が一番強い</li>
         </ul>
-        
+
         <style>{`
           .wrapper {
             text-align: center;
