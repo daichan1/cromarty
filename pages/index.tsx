@@ -18,6 +18,9 @@ class Top extends React.Component {
           <Link href="/rule">
             <a className="link mg-20">ルール説明</a>
           </Link>
+          <Link href="/game">
+            <a className="link mg-20">スタート!!</a>
+          </Link>
         </div>
 
         <style jsx>{`
