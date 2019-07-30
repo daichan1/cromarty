@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
+import Title from '../components/common/title'
 
 class Top extends React.Component {
   constructor(props) {
@@ -14,7 +15,7 @@ class Top extends React.Component {
           <title>ハイ&ロー</title>
         </Head>
         <div className="wrapper">
-          <h1 className="title">ハイ&ロー</h1>
+          <Title body="ハイ&ロー" />
           <Link href="/rule">
             <a className="link mg-20">ルール説明</a>
           </Link>

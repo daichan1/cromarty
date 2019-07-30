@@ -1,4 +1,5 @@
 import React from 'react'
+import Title from '../../components/common/title'
 
 class Game extends React.Component {
   constructor(props) {
@@ -8,7 +9,7 @@ class Game extends React.Component {
   render(): JSX.Element {
     return (
       <div className="wrapper">
-        <h1>ゲーム画面</h1>
+        <Title body="ゲーム画面" />
         {/* トランプを表示 */}
         <img
           src="/static/spade_1.png"
