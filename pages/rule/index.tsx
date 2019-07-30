@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import Title from '../../components/common/title'
 
 class Rule extends React.Component {
   constructor(props) {
@@ -12,7 +13,7 @@ class Rule extends React.Component {
         <Link href="/">
           <a>トップへ戻る</a>
         </Link>
-        <h1 className="title">ルール説明</h1>
+        <Title body="ルール説明" />
 
         <h2>遊び方</h2>
         <ul>
