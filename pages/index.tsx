@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
+import { Button } from 'sancho'
 import Title from '../components/common/title'
 
 class Top extends React.Component {
@@ -14,25 +15,42 @@ class Top extends React.Component {
         <Head>
           <title>ハイ&ロー</title>
         </Head>
-        <div className="wrapper">
+        <div className="wrapper center">
           <Title body="ハイ&ロー" />
-          <Link href="/rule">
-            <a className="link mg-20">ルール説明</a>
-          </Link>
-          <Link href="/game">
-            <a className="link mg-20">スタート!!</a>
-          </Link>
+          <div className="button center">
+            <Button>
+              <Link href="/rule">
+                <a className="link">ルール説明</a>
+              </Link>
+            </Button>
+          </div>
+          <div className="button">
+            <Button intent="primary">
+              <Link href="/game">
+                <a className="link">スタート!!</a>
+              </Link>
+            </Button>
+          </div>
         </div>
 
+        <style jsx global>{`
+          body {
+            background: #005500;
+          }
+        `}</style>
         <style jsx>{`
           .wrapper {
             text-align: center;
           }
           .link {
-            display: block;
+            color: black;
+            text-decoration: none;
           }
-          .mg-20 {
+          .button {
             margin: 20px;
+          }
+          .center {
+            margin-top: 200px;
           }
         `}</style>
       </div>
