@@ -10,6 +10,7 @@ interface Props {
 interface State {
   coin: number
   playingCards: string[]
+  nextCard: string
   gameCount: number
 }
 
@@ -35,15 +36,14 @@ class Game extends React.Component<{}, State> {
     this.state = {
       coin: 1000,
       playingCards: [],
+      nextCard: 'static/back.png',
       gameCount: 0
     }
   }
-
   // render後に実行される処理
   componentDidMount(): void {
     this.shuffle(this.getPlayingCards())
   }
-
   // トランプ画像を取得
   getPlayingCards(): string[] {
     const playingCards = []
@@ -57,7 +57,6 @@ class Game extends React.Component<{}, State> {
     playingCards.push(`static/joker.png`)
     return playingCards
   }
-
   // トランプ画像をシャッフル
   shuffle(playingCards: string[]): void {
     // シャッフル
@@ -68,6 +67,12 @@ class Game extends React.Component<{}, State> {
       playingCards[rand] = temp
     }
     this.setState({ playingCards: playingCards })
+  }
+  // トランプをひっくり返す
+  answer = (): void => {
+    this.setState({
+      nextCard: this.state.playingCards[this.state.gameCount + 1]
+    })
   }
 
   render(): JSX.Element {
@@ -92,17 +97,23 @@ class Game extends React.Component<{}, State> {
             />
             <ul className="select-btn">
               <li className="btn high">
-                <Button size="lg">⬆︎</Button>
+                <Button size="lg" onClick={this.answer}>
+                  ⬆︎
+                </Button>
               </li>
               <li className="btn equal">
-                <Button size="lg">＝</Button>
+                <Button size="lg" onClick={this.answer}>
+                  ＝
+                </Button>
               </li>
               <li className="btn low">
-                <Button size="lg">⬇︎</Button>
+                <Button size="lg" onClick={this.answer}>
+                  ⬇︎
+                </Button>
               </li>
             </ul>
             <img
-              src="static/back.png"
+              src={this.state.nextCard}
               alt="トランプ裏"
               width="200px"
               height="400px"
