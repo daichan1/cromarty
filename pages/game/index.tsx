@@ -1,4 +1,6 @@
 import React from 'react'
+import Link from 'next/link'
+import { Button } from 'sancho'
 import Title from '../../components/common/title'
 
 interface Props {
@@ -75,21 +77,39 @@ class Game extends React.Component<{}, State> {
       coins.push(i)
     }
     return (
-      <div className="wrapper">
-        <Title body="ゲーム画面" />
-        <img
-          src={this.state.playingCards[this.state.gameCount]}
-          alt="トランプ画像"
-          width="200px"
-          height="400px"
-        />
-        <p>BETするコインを選択してください</p>
-        <DisplayBetCoin coins={coins} />
-        {/* ハイかローかイコールかを選択 */}
-        <div className="answer-buttons mg-20">
-          <button>ハイ</button>
-          <button>ロー</button>
-          <button>イコール</button>
+      <div>
+        <Link href="/">
+          <a>トップへ戻る</a>
+        </Link>
+        <div className="wrapper">
+          <Title body="ゲーム画面" />
+          <div>
+            <img
+              src={this.state.playingCards[this.state.gameCount]}
+              alt="トランプ表"
+              width="200px"
+              height="400px"
+            />
+            <ul className="select-btn">
+              <li className="btn high">
+                <Button size="lg">⬆︎</Button>
+              </li>
+              <li className="btn equal">
+                <Button size="lg">＝</Button>
+              </li>
+              <li className="btn low">
+                <Button size="lg">⬇︎</Button>
+              </li>
+            </ul>
+            <img
+              src="static/back.png"
+              alt="トランプ裏"
+              width="200px"
+              height="400px"
+            />
+          </div>
+          <p>BETするコインを選択してください</p>
+          <DisplayBetCoin coins={coins} />
         </div>
 
         <style jsx>{`
@@ -101,6 +121,27 @@ class Game extends React.Component<{}, State> {
           }
           .mg-20 {
             margin: 20px;
+          }
+          .select-btn {
+            display: inline-block;
+            list-style-type: none;
+            margin: 0;
+            padding: 20px;
+          }
+          .btn {
+            margin-bottom: 20px;
+          }
+          .high {
+            position: relative;
+            top: -200px;
+          }
+          .equal {
+            position: relative;
+            top: -120px;
+          }
+          .low {
+            position: relative;
+            top: -40px;
           }
         `}</style>
       </div>
