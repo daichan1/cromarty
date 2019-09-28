@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { Button } from 'sancho'
+import { Button, Text } from 'sancho'
 import Title from '../../components/common/title'
 
 interface Props {
@@ -172,6 +172,7 @@ class Game extends React.Component<{}, State> {
         <div className="wrapper">
           <Title body="ゲーム画面" />
           <div>
+            <Text variant="display3">{`所持コイン数：${this.state.coin}`}</Text>
             <img
               src={this.state.currentCard}
               alt="トランプ表"
