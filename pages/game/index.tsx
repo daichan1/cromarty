@@ -1,7 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { Button, Text } from 'sancho'
-import Title from '../../components/common/title'
+import { Button, Text, Select, InputGroup } from 'sancho'
 
 interface Props {
   coins: number[]
@@ -25,7 +24,11 @@ const DisplayBetCoin = (props: Props): JSX.Element => {
       </option>
     )
   )
-  return <select>{options}</select>
+  return (
+    <InputGroup label="ベットするコインを選択してください">
+      <Select>{options}</Select>
+    </InputGroup>
+  )
 }
 
 // ※秒待機関数
@@ -170,9 +173,13 @@ class Game extends React.Component<{}, State> {
           <a>トップへ戻る</a>
         </Link>
         <div className="wrapper">
-          <Title body="ゲーム画面" />
-          <div>
-            <Text variant="display3">{`所持コイン数：${this.state.coin}`}</Text>
+          <div className="container">
+            <div className="select-coin">
+              <Text variant="display3">{`所持コイン数：${this.state.coin}`}</Text>
+              <div className="select">
+                <DisplayBetCoin coins={coins} />
+              </div>
+            </div>
             <img
               src={this.state.currentCard}
               alt="トランプ表"
@@ -203,12 +210,14 @@ class Game extends React.Component<{}, State> {
               height="400px"
             />
           </div>
-          <p>BETするコインを選択してください</p>
-          <DisplayBetCoin coins={coins} />
         </div>
 
         <style jsx>{`
           .wrapper {
+            width: 690px;
+            margin: 0 auto;
+          }
+          .container {
             text-align: center;
           }
           .link {
@@ -216,6 +225,13 @@ class Game extends React.Component<{}, State> {
           }
           .mg-20 {
             margin: 20px;
+          }
+          .select {
+            width: 250px;
+            margin: 0 auto;
+          }
+          .select-coin {
+            margin-bottom: 40px;
           }
           .select-btn {
             display: inline-block;
