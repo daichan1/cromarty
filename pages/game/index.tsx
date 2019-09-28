@@ -11,6 +11,7 @@ interface State {
   coin: number
   playingCards: string[]
   playingCardNumbers: number[]
+  currentCard: string
   nextCard: string
   gameCount: number
 }
@@ -27,6 +28,15 @@ const DisplayBetCoin = (props: Props): JSX.Element => {
   return <select>{options}</select>
 }
 
+// ※秒待機関数
+async function wait(sec: number): Promise<void> {
+  await new Promise((resolve): void => {
+    setTimeout((): void => {
+      resolve()
+    }, sec * 1000)
+  })
+}
+
 // ゲーム画面
 class Game extends React.Component<{}, State> {
   constructor(props) {
@@ -40,6 +50,7 @@ class Game extends React.Component<{}, State> {
       coin: 1000,
       playingCards: [],
       playingCardNumbers: [],
+      currentCard: 'static/back.png',
       nextCard: 'static/back.png',
       gameCount: 0
     }
@@ -49,6 +60,7 @@ class Game extends React.Component<{}, State> {
     const playingCards = this.allPlayingCards()
     const playingCardNumbers = this.allPlayingCardNumbers(playingCards)
     this.shuffle(playingCards, playingCardNumbers)
+    this.setState({ currentCard: playingCards[0] })
   }
   // トランプ画像を取得
   allPlayingCards(): string[] {
@@ -99,6 +111,8 @@ class Game extends React.Component<{}, State> {
     this.setState({
       nextCard: this.state.playingCards[this.state.gameCount + 1]
     })
+    // 次のゲームの準備
+    this.nextGame()
   }
   // 回答チェック
   answerCheck(num: number): boolean {
@@ -128,6 +142,21 @@ class Game extends React.Component<{}, State> {
       return false
     }
   }
+  // 次のゲームへの準備
+  nextGame(): void {
+    if (this.state.gameCount <= this.state.playingCards.length) {
+      wait(2).then((): void => {
+        this.setState({
+          currentCard: this.state.playingCards[this.state.gameCount + 1],
+          nextCard: 'static/back.png',
+          gameCount: this.state.gameCount + 1
+        })
+      })
+    } else {
+      // 最終ゲームまで行ったらゲーム終了
+      console.log('最終ゲームまで行ったのでゲーム終了')
+    }
+  }
 
   render(): JSX.Element {
     const coinInterval = 100
@@ -144,7 +173,7 @@ class Game extends React.Component<{}, State> {
           <Title body="ゲーム画面" />
           <div>
             <img
-              src={this.state.playingCards[this.state.gameCount]}
+              src={this.state.currentCard}
               alt="トランプ表"
               width="200px"
               height="400px"
