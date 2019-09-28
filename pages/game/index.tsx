@@ -10,6 +10,7 @@ interface Props {
 interface State {
   coin: number
   playingCards: string[]
+  playingCardNumbers: number[]
   nextCard: string
   gameCount: number
 }
@@ -31,21 +32,26 @@ class Game extends React.Component<{}, State> {
   constructor(props) {
     super(props)
     // coin：初期所持コインは1000
-    // images：トランプ画像格納用配列
+    // playingCards：トランプ画像格納用配列
+    // playingCardNumbers：トランプの数値格納用配列
+    // nextCard：次のトランプ
     // gameCount：何ゲーム目か
     this.state = {
       coin: 1000,
       playingCards: [],
+      playingCardNumbers: [],
       nextCard: 'static/back.png',
       gameCount: 0
     }
   }
   // render後に実行される処理
   componentDidMount(): void {
-    this.shuffle(this.getPlayingCards())
+    const playingCards = this.allPlayingCards()
+    const playingCardNumbers = this.allPlayingCardNumbers(playingCards)
+    this.shuffle(playingCards, playingCardNumbers)
   }
   // トランプ画像を取得
-  getPlayingCards(): string[] {
+  allPlayingCards(): string[] {
     const playingCards = []
     // トランプ画像のURLを格納
     for (let i = 1; i <= 13; i++) {
@@ -57,22 +63,70 @@ class Game extends React.Component<{}, State> {
     playingCards.push(`static/joker.png`)
     return playingCards
   }
-  // トランプ画像をシャッフル
-  shuffle(playingCards: string[]): void {
-    // シャッフル
+  // トランプの数値を取得
+  allPlayingCardNumbers(playingCards: string[]): number[] {
+    const numbers = []
+    const maxNunber = 14
+    // トランプの数値を格納
+    playingCards.forEach((playingCard): void => {
+      const replace = Number(playingCard.match(/[0-9]{1,2}/g))
+      const number = replace == 0 ? maxNunber : replace
+      numbers.push(number)
+    })
+    return numbers
+  }
+  // トランプをシャッフル
+  shuffle(playingCards: string[], playingCardNumbers: number[]): void {
+    // 画像と数値をシャッフル
     for (let i = playingCards.length - 1; i >= 0; i--) {
       let rand: number = Math.floor(Math.random() * (i + 1))
-      let temp: string = playingCards[i]
+      let tempPlayingCard: string = playingCards[i]
       playingCards[i] = playingCards[rand]
-      playingCards[rand] = temp
+      playingCards[rand] = tempPlayingCard
+      let tempPlayingCardNumber: number = playingCardNumbers[i]
+      playingCardNumbers[i] = playingCardNumbers[rand]
+      playingCardNumbers[rand] = tempPlayingCardNumber
     }
-    this.setState({ playingCards: playingCards })
+    this.setState({
+      playingCards: playingCards,
+      playingCardNumbers: playingCardNumbers
+    })
   }
-  // トランプをひっくり返す
-  answer = (): void => {
+  // 回答
+  answer(num: number): void {
+    const isJudge = this.answerCheck(num)
+    console.log(isJudge)
     this.setState({
       nextCard: this.state.playingCards[this.state.gameCount + 1]
     })
+  }
+  // 回答チェック
+  answerCheck(num: number): boolean {
+    // トランプの数字が大きい場合
+    if (
+      this.state.playingCardNumbers[this.state.gameCount] <
+        this.state.playingCardNumbers[this.state.gameCount + 1] &&
+      num == 0
+    ) {
+      return true
+      // トランプの数字が同じの場合
+    } else if (
+      this.state.playingCardNumbers[this.state.gameCount] ==
+        this.state.playingCardNumbers[this.state.gameCount + 1] &&
+      num == 1
+    ) {
+      return true
+      // トランプの数字が小さい場合
+    } else if (
+      this.state.playingCardNumbers[this.state.gameCount] >
+        this.state.playingCardNumbers[this.state.gameCount + 1] &&
+      num == 2
+    ) {
+      return true
+      // 不正解の場合
+    } else {
+      return false
+    }
   }
 
   render(): JSX.Element {
@@ -97,17 +151,17 @@ class Game extends React.Component<{}, State> {
             />
             <ul className="select-btn">
               <li className="btn high">
-                <Button size="lg" onClick={this.answer}>
+                <Button size="lg" onClick={(): void => this.answer(0)}>
                   ⬆︎
                 </Button>
               </li>
               <li className="btn equal">
-                <Button size="lg" onClick={this.answer}>
+                <Button size="lg" onClick={(): void => this.answer(1)}>
                   ＝
                 </Button>
               </li>
               <li className="btn low">
-                <Button size="lg" onClick={this.answer}>
+                <Button size="lg" onClick={(): void => this.answer(2)}>
                   ⬇︎
                 </Button>
               </li>
