@@ -3,7 +3,9 @@ import Link from 'next/link'
 import { Button, Text, Select, InputGroup } from 'sancho'
 
 interface Props {
-  coins: number[]
+  coin: number
+  selectCoin: number
+  changeCoin(coin: number): void
 }
 
 interface State {
@@ -13,11 +15,20 @@ interface State {
   currentCard: string
   nextCard: string
   gameCount: number
+  selectCoin: number
 }
 
 // 所持コイン数を100単位で表示(selectタグで)
 const DisplayBetCoin = (props: Props): JSX.Element => {
-  const options = props.coins.map(
+  function handleChange(event): void {
+    props.changeCoin(Number(event.target.value))
+  }
+  const coinInterval = 100
+  let coins = []
+  for (let i = coinInterval; i <= props.coin; i += coinInterval) {
+    coins.push(i)
+  }
+  const options = coins.map(
     (coin): JSX.Element => (
       <option key={coin.toString()} value={coin}>
         {coin}
@@ -26,7 +37,9 @@ const DisplayBetCoin = (props: Props): JSX.Element => {
   )
   return (
     <InputGroup label="ベットするコインを選択してください">
-      <Select>{options}</Select>
+      <Select value={props.selectCoin} onChange={handleChange}>
+        {options}
+      </Select>
     </InputGroup>
   )
 }
@@ -55,7 +68,8 @@ class Game extends React.Component<{}, State> {
       playingCardNumbers: [],
       currentCard: 'static/back.png',
       nextCard: 'static/back.png',
-      gameCount: 0
+      gameCount: 0,
+      selectCoin: 100
     }
   }
   // render後に実行される処理
@@ -109,11 +123,12 @@ class Game extends React.Component<{}, State> {
   }
   // 回答
   answer(num: number): void {
-    const isJudge = this.answerCheck(num)
-    console.log(isJudge)
     this.setState({
       nextCard: this.state.playingCards[this.state.gameCount + 1]
     })
+    const isJudge = this.answerCheck(num)
+    // 勝敗によってコインを変動させる
+    isJudge ? this.win(num) : this.lose()
     // 次のゲームの準備
     this.nextGame()
   }
@@ -145,6 +160,18 @@ class Game extends React.Component<{}, State> {
       return false
     }
   }
+  // 勝利時のコイン変動
+  win(num: number): void {
+    if (num == 1) {
+      this.setState({ coin: this.state.coin + this.state.selectCoin * 2 })
+    } else {
+      this.setState({ coin: this.state.coin + this.state.selectCoin })
+    }
+  }
+  // 敗北時のコイン調整
+  lose(): void {
+    this.setState({ coin: this.state.coin - this.state.selectCoin })
+  }
   // 次のゲームへの準備
   nextGame(): void {
     if (this.state.gameCount <= this.state.playingCards.length) {
@@ -160,13 +187,12 @@ class Game extends React.Component<{}, State> {
       console.log('最終ゲームまで行ったのでゲーム終了')
     }
   }
+  // 選択したコインを更新
+  changeCoin = (coin: number): void => {
+    this.setState({ selectCoin: coin })
+  }
 
   render(): JSX.Element {
-    const coinInterval = 100
-    let coins = []
-    for (let i = coinInterval; i <= this.state.coin; i += coinInterval) {
-      coins.push(i)
-    }
     return (
       <div>
         <Link href="/">
@@ -177,7 +203,11 @@ class Game extends React.Component<{}, State> {
             <div className="select-coin">
               <Text variant="display3">{`所持コイン数：${this.state.coin}`}</Text>
               <div className="select">
-                <DisplayBetCoin coins={coins} />
+                <DisplayBetCoin
+                  coin={this.state.coin}
+                  selectCoin={this.state.selectCoin}
+                  changeCoin={this.changeCoin}
+                />
               </div>
             </div>
             <img
