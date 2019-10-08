@@ -54,9 +54,9 @@ class Rule extends React.Component {
                 </Text>
               </TableCell>
               <TableCell>
-                上か下かで当てた場合は、ベットしたコイン*2を獲得
+                上か下かで当てた場合は、ベットしたコイン数分上乗せ
                 <br />
-                イコールで当てた場合は、ベットしたコイン*4を獲得
+                イコールで当てた場合は、ベットしたコイン数*2を上乗せ
               </TableCell>
             </TableRow>
             <TableRow>
