@@ -33,11 +33,6 @@ class Top extends React.Component {
           </div>
         </div>
 
-        <style jsx global>{`
-          body {
-            background: #005500;
-          }
-        `}</style>
         <style jsx>{`
           .wrapper {
             text-align: center;
