@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import Router from 'next/router'
 import { Button, Text, Select, InputGroup } from 'sancho'
 
 interface Props {
@@ -60,8 +61,10 @@ class Game extends React.Component<{}, State> {
     // coin：初期所持コインは1000
     // playingCards：トランプ画像格納用配列
     // playingCardNumbers：トランプの数値格納用配列
+    // currentCard：現在のトランプ
     // nextCard：次のトランプ
     // gameCount：何ゲーム目か
+    // selectCoin：ベットしたコイン
     this.state = {
       coin: 1000,
       playingCards: [],
@@ -78,6 +81,22 @@ class Game extends React.Component<{}, State> {
     const playingCardNumbers = this.allPlayingCardNumbers(playingCards)
     this.shuffle(playingCards, playingCardNumbers)
     this.setState({ currentCard: playingCards[0] })
+  }
+  // State更新時に実行される処理
+  componentDidUpdate(prevProps: { coin: number }): void {
+    if (prevProps.coin != this.state.coin) {
+      // 所持コイン数が0またはトランプの枚数分繰り返したらゲーム終了
+      if (
+        this.state.coin == 0 ||
+        this.state.gameCount >= this.state.playingCards.length
+      ) {
+        // ゲーム終了のため、リザルト画面へ遷移する
+        Router.push({
+          pathname: '/result',
+          query: { coin: this.state.coin }
+        })
+      }
+    }
   }
   // トランプ画像を取得
   allPlayingCards(): string[] {
@@ -174,18 +193,15 @@ class Game extends React.Component<{}, State> {
   }
   // 次のゲームへの準備
   nextGame(): void {
-    if (this.state.gameCount <= this.state.playingCards.length) {
-      wait(2).then((): void => {
-        this.setState({
-          currentCard: this.state.playingCards[this.state.gameCount + 1],
-          nextCard: 'static/back.png',
-          gameCount: this.state.gameCount + 1
-        })
+    const currentGameCount = this.state.gameCount
+    // ゲーム終了の判定を行うため先にStateを更新する
+    this.setState({ gameCount: this.state.gameCount + 1 })
+    wait(1).then((): void => {
+      this.setState({
+        currentCard: this.state.playingCards[currentGameCount + 1],
+        nextCard: 'static/back.png'
       })
-    } else {
-      // 最終ゲームまで行ったらゲーム終了
-      console.log('最終ゲームまで行ったのでゲーム終了')
-    }
+    })
   }
   // 選択したコインを更新
   changeCoin = (coin: number): void => {
